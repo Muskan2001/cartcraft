@@ -9,7 +9,6 @@ function clearExpandedFields() {
 unitOptions.forEach((option) => {
   option.addEventListener("change", (e) => {
     clearExpandedFields();
-
     const selectedUnit = e.target.id;
     let price;
     let units = 0;
@@ -28,17 +27,21 @@ unitOptions.forEach((option) => {
         units = 3;
         break;
     }
-
     totalPriceElement.textContent = price;
-
+    const allOfferItems = document.querySelectorAll(".offer-item");
+    allOfferItems.forEach((item) =>
+      item.classList.remove("highlight-selection")
+    );
     const parent = option.closest(".offer-item");
     const expandedFields = document.createElement("div");
     expandedFields.classList.add("expanded-fields");
-    
+    var sizeField = "";
+    var colorField = "";
     for (let i = 1; i <= units; i++) {
-      const sizeField = `
+      if (i == 1) {
+        sizeField = `
         <div class="option">
-          <label for="size-${selectedUnit}-${i}">#${i} Size</label>
+          <label for="size-${selectedUnit}-${i}">  Size</label>
           <select id="size-${selectedUnit}-${i}">
             <option value="S">S</option>
             <option value="M">M</option>
@@ -46,9 +49,21 @@ unitOptions.forEach((option) => {
           </select>
         </div>
       `;
-      const colorField = `
+      } else {
+        sizeField = `
         <div class="option">
-          <label for="color-${selectedUnit}-${i}">#${i} Color</label>
+          <select id="size-${selectedUnit}-${i}">
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
+        </div>
+      `;
+      }
+      if (i == 1) {
+        colorField = `
+        <div class="option">
+          <label for="color-${selectedUnit}-${i}">  Color</label>
           <select id="color-${selectedUnit}-${i}">
             <option value="Black">Black</option>
             <option value="Blue">Blue</option>
@@ -56,11 +71,21 @@ unitOptions.forEach((option) => {
           </select>
         </div>
       `;
+      } else {
+        colorField = `
+        <div class="option">
+          <select id="color-${selectedUnit}-${i}">
+            <option value="Black">Black</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+          </select>
+        </div>
+      `;
+      }
       expandedFields.innerHTML += sizeField + colorField;
     }
 
     parent.appendChild(expandedFields);
+    parent.classList.add("highlight-selection");
   });
 });
-
-
